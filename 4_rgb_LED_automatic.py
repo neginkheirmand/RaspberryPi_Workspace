@@ -52,14 +52,30 @@ def color(list):
         GPIO.cleanup()
 
 def main():
-    list=[1,1,1]
-    for i in range(2):
-        list[0]=i
-        for j in range (2):
-            list[1]=j
-            for k in range(2):
-                list[2]=k
-                color(list)
-                print(list)
 
+    i = 0;
+    try:
+        while True:
+            GPIO.setmode(GPIO.BCM) 
+            GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+            listContain = [[0, 0, 0],
+                        [0, 0, 1],
+                        [0, 1, 0],
+                        [0, 1, 1],
+                        [1, 0, 0],
+                        [1, 0, 1],
+                        [1, 1, 0],
+                        [1, 1, 1]]
+            GPIO.setup(16, GPIO.OUT)
+            GPIO.output(16, GPIO.HIGH)
+            if GPIO.input(21) == GPIO.HIGH:
+                time.sleep(0.2)
+                print("next color")
+                if(i%8==7):
+                    i+=1
+                color(listContain[i%8])
+                i+=1
+    finally:
+            GPIO.output(16, GPIO.LOW)
+            GPIO.cleanup()
 main()
